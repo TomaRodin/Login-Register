@@ -1,0 +1,41 @@
+<html>
+<body>
+
+<h1>Login</h1>
+
+<div class="reform">
+    <form id="reform">
+        <h4 style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">Username:</h4>
+        <input type="text" name="user" required/>
+        <h4 style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">Password:</h4>
+        <input type="text" name="pass" required/>
+        
+    </form>
+    <div class="butt">Login</div>
+</div>
+<br>
+<br>
+<a href="/register">Register</a>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+$(document).ready(function(){
+        $('.butt').click(function(){
+            var user =$('input[name="user"]').val();
+            var pass =$('input[name="pass"]').val();
+             $.post('/',$('#reform').serialize()).done(
+               function(data){
+                if(data.redirect) {
+                      window.location.href=data.url;
+                     }
+                
+                 console.log(user)
+                 console.log(pass)
+                })
+        })
+    })
+</script>
+
+</body>
+</html>

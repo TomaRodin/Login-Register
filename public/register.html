@@ -1,0 +1,48 @@
+<html>
+<body>
+
+<style>
+
+
+    a {
+        font-family : 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    }
+</style>
+    
+<h1>Register</h1>
+
+
+<div class="reform">
+    <form id="reform">
+        <h4 style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">Username:</h4>
+        <input type="text" name="username" required/>
+        <h4 style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">Password:</h4>
+        <input type="password"  class="comment" name="comment"  required></input> 
+    </form>
+    <div class="butt">Register</div>
+</div>
+<br>
+<br>
+<a href="/">Login</a>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
+<script>
+$(document).ready(function(){
+        $('.butt').click(function(){
+            var username =$('input[name="username"]').val();
+            var comment =$('input[name="comment"]').val();
+             $.post('/register',$('#reform').serialize()).done(
+               function(data){
+                if(data.redirect) {
+                  window.location.href=data.url;
+                 }
+                 console.log(username)
+                 console.log(comment)
+                })
+        })
+    })
+</script>
+
+
+</body>
+</html>
