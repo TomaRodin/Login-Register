@@ -74,4 +74,20 @@ app.get('/alerdy_exist', function (req, res) {
     res.sendFile(__dirname + '/public/alerdy.html')
 })
 
+app.get('/search/:name',function (req, res) {
+    var name = req.params.name
+    var JSONObject = fs.readFileSync(__dirname + '/data.json')
+
+    
+    if (JSONObject.includes(req.params.name)) {
+    var user = users.find(u => u.name === name);    
+    console.log(user.name)
+    res.send(user.name+ "   "+user.pass)
+    }
+    else  {
+        res.send("This user doesn't exist")
+    }
+
+})
+
 app.listen(3000)

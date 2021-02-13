@@ -37,5 +37,23 @@ $(document).ready(function(){
     })
 </script>
 
+<br>
+
+<h3>Search users</h3>
+<input type="text" placeholder="Search:" id="myInput">
+    <button type="button" onclick="getInputValue();">Search</button>
+    
+    <script>
+        function getInputValue(){
+            
+            var inputVal = document.getElementById("myInput").value;
+            
+            window.location.href = "http://localhost:3000/Search/"+inputVal;
+        }
+    </script>
+
+
+
+
 </body>
 </html>
