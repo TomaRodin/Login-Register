@@ -2,8 +2,9 @@ var express = require('express');
 var fs = require('fs'); 
 var bodyParser = require('body-parser')
 var app = express();
+var cookieParser = require('cookie-parser')
 
-
+app.use(cookieParser()); 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 var users = JSON.parse(fs.readFileSync('./data.json', 'UTF-8'));
@@ -20,15 +21,18 @@ app.post('/', function (req, res) {
     var user = users.find(u => u.name === username);
     if (username == user.name && password == user.pass) {
         console.log("Succesfully Login")
-        res.send({ redirect: true, url: "/user/" + username })
-        
+        res.cookie('LoggedIn', "true")
 
+        res.send({ redirect: true, url: "/user"  })
 
-        app.get('/user/' + username, function (req, res) {
-            res.render(__dirname + '/public/user.ejs', { name: username })
+        app.get('/user', function (req, res) {
+            if (req.cookies.LoggedIn == undefined) {
+                res.redirect('/')
+            }
+            else {
+                    res.render(__dirname + '/public/user.ejs', { name: username })
+                }
         })
-
-
 
     } else {
         res.send({ redirect: true, url: "/" });
@@ -68,7 +72,10 @@ app.post('/register', function (req, res) {
 })
 
 
-
+app.get('/logout',function(req,res){
+    res.clearCookie("LoggedIn")
+    res.redirect('/')
+})
 
 app.get('/alerdy_exist', function (req, res) {
     res.sendFile(__dirname + '/public/alerdy.html')
