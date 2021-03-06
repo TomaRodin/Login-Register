@@ -2,15 +2,32 @@
 
 <style>
     h1 {
-        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
     }
 
     a {
         font-family : 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        padding-left: 150px;
     }
-</style>
+    .div {background-color:#4E7D96;
+    padding-left: 150px;
+    padding-bottom: 20px;}
 
-<h1>Welcome, <%=name%></h1>
+    .user {
+        position: absolute;
+        padding-left: 50px;
+        padding-top: 15px;
+    }    
+</style>
+<img src="/Images/ko.png" class="user" height="70" width="70">
+<div class="div">
+    
+    <h1 style="padding-top:30px">Welcome, <%=name%></h1>
+    
+</div>
+<h3 style="padding-left: 150px;">Your Mail: <%=mail%></h3>
+
+<a href="/user/home">Home</a>
 
 <a href="/logout">Log Out</a>
 <br>

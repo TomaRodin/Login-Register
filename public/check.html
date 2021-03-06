@@ -1,0 +1,34 @@
+<html>
+<body>
+
+
+<h1>Enter Your Token:</h1>
+
+
+
+<form id="form">
+<input name="token">
+</form>
+
+<button class="butt" >Sumbit</button>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+$(document).ready(function(){
+        $('.butt').click(function(){
+            var mytoken =$('input[name="token"]').val();
+             $.post('/forgot_password/check',$('#form').serialize()).done(
+               function(data){
+                if(data.redirect) {
+                      window.location.href=data.url;
+                     }
+                
+ 
+                })
+        })
+    })
+</script>
+
+</body>
+</html>

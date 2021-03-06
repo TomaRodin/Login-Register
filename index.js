@@ -1,11 +1,14 @@
 var express = require('express');
-var fs = require('fs'); 
+var nodemailer = require('nodemailer')
+var fs = require('fs');
 var bodyParser = require('body-parser')
 var app = express();
 var cookieParser = require('cookie-parser')
 
-app.use(cookieParser()); 
+
+app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static('public'));
 app.use(bodyParser.json());
 var users = JSON.parse(fs.readFileSync('./data.json', 'UTF-8'));
 
@@ -23,15 +26,16 @@ app.post('/', function (req, res) {
         console.log("Succesfully Login")
         res.cookie('LoggedIn', "true")
 
-        res.send({ redirect: true, url: "/user"  })
+        res.send({ redirect: true, url: "/user" })
 
         app.get('/user', function (req, res) {
             if (req.cookies.LoggedIn == undefined) {
                 res.redirect('/')
             }
             else {
-                    res.render(__dirname + '/public/user.ejs', { name: username })
-                }
+                var mail = user.mail
+                res.render(__dirname + '/public/user.ejs', { name: username , mail: mail })
+            }
         })
 
     } else {
@@ -60,7 +64,9 @@ app.post('/register', function (req, res) {
         var array = JSON.parse(fs.readFileSync('./data.json', 'utf8'));
         array.push({
             "name": req.body.username,
-            "pass": req.body.comment
+            "pass": req.body.comment,
+            "mail": req.body.mail
+
         })
 
         var jsonArray = JSON.stringify(array);
@@ -72,7 +78,7 @@ app.post('/register', function (req, res) {
 })
 
 
-app.get('/logout',function(req,res){
+app.get('/logout', function (req, res) {
     res.clearCookie("LoggedIn")
     res.redirect('/')
 })
@@ -81,20 +87,42 @@ app.get('/alerdy_exist', function (req, res) {
     res.sendFile(__dirname + '/public/alerdy.html')
 })
 
-app.get('/search/:name',function (req, res) {
+
+
+app.get('/search/:name', function (req, res) {
     var name = req.params.name
     var JSONObject = fs.readFileSync(__dirname + '/data.json')
 
-    
+
     if (JSONObject.includes(req.params.name)) {
-    var user = users.find(u => u.name === name);    
-    console.log(user.name)
-    res.send(user.name+ "   "+user.pass)
+        var user = users.find(u => u.name === name);
+        console.log(user.name)
+        res.render(__dirname + '/public/search.ejs', {name: user.name, mail:user.mail})
     }
-    else  {
+    else {
         res.send("This user doesn't exist")
     }
 
 })
+app.get('/user/home',function(req, res){
+    if (req.cookies.LoggedIn == undefined){
+        res.redirect('/')
+
+    
+    } else {
+        res.sendFile(__dirname + '/public/home.html')
+    }
+})
+
+
+
+
+
+
+
+
+
+
+
 
 app.listen(3000)

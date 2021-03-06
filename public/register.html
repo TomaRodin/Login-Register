@@ -16,10 +16,12 @@
     <form id="reform">
         <h4 style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">Username:</h4>
         <input type="text" name="username" required/>
+        <h4 style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">E-mail:</h4>
+        <input type="text" name="mail" required/>
         <h4 style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">Password:</h4>
         <input type="password"  class="comment" name="comment"  required></input> 
     </form>
-    <div class="butt">Register</div>
+    <button class="butt">Register</button>
 </div>
 <br>
 <br>
@@ -31,6 +33,7 @@ $(document).ready(function(){
         $('.butt').click(function(){
             var username =$('input[name="username"]').val();
             var comment =$('input[name="comment"]').val();
+            var mail =$('input[name="mail"]').val();
              $.post('/register',$('#reform').serialize()).done(
                function(data){
                 if(data.redirect) {
@@ -38,6 +41,7 @@ $(document).ready(function(){
                  }
                  console.log(username)
                  console.log(comment)
+                 console.log(mail)
                 })
         })
     })

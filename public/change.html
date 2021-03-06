@@ -1,0 +1,31 @@
+<html>
+<bod>
+
+<h1>Enter new password</h1>
+
+<form id="reform">
+<input name="change">
+</form>
+
+<button class="btn">Reset</button>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+$(document).ready(function(){
+        $('.btn').click(function(){
+            var newpassword =$('input[name="change"]').val();
+             $.post('/forgot_password/change_password',$('#reform').serialize()).done(
+               function(data){
+                if(data.redirect) {
+                      window.location.href=data.url;
+                     }
+                
+                })
+        })
+    })
+</script>
+
+
+</bod>
+</html>

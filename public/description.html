@@ -1,0 +1,28 @@
+<html>
+<body>
+
+<h1>Add Description</h1>
+
+<form id="form">
+  <input name="hoph">
+<button class="btn-de">Add</button>
+</form>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+            $('.btn-de').click(function(){
+                var description =$('input[name="hoph"]').val();
+                 $.post('/user/description',$('#form').serialize()).done(
+                   function(data){
+                    if(data.redirect) {
+                      window.location.href=data.url;
+                     }
+                     console.log(desc)
+                    })
+            })
+        })
+</script>
+
+
+</body>
+</html>
