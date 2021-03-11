@@ -34,7 +34,7 @@ app.post('/', function (req, res) {
                 res.redirect('/')
             }
             else {
-                res.render(__dirname + '/public/user.ejs', { name: username, mail: user.mail })
+                res.render(__dirname + '/public/user.ejs', { name: username, mail: user.mail, description:user.desc })
             }
         })
 
@@ -146,6 +146,30 @@ app.post('/', function (req, res) {
 
         })
 
+        app.get('/user/settings/change_description',function(req, res){
+            if(req.cookies.LoggedIn == undefined){
+                res.redirect('/')
+            }
+
+            else {
+                res.sendFile(__dirname+'/public/changedesc.html')
+            }
+        })
+
+        app.post('/user/settings/change_description',function(req, res){
+            console.log(req.body.description)
+            var myArra = JSON.parse(fs.readFileSync('./data.json', 'UTF-8'));
+            objIndex = myArra.findIndex((obj => obj.name == username));
+
+            console.log(myArra)
+
+            myArra[objIndex].desc = req.body.description
+
+            console.log(myArra)
+            changedesc = JSON.stringify(myArra);
+            res.redirect('/')
+            fs.writeFileSync('./data.json',changedesc , { encoding: 'utf8', flag: 'w' });
+        })
 
 
     
@@ -177,7 +201,8 @@ app.post('/register', function (req, res) {
         array.push({
             "name": req.body.username,
             "pass": req.body.comment,
-            "mail": req.body.mail
+            "mail": req.body.mail,
+            "desc":""
 
         })
 
@@ -208,8 +233,7 @@ app.get('/search/:name', function (req, res) {
 
     if (JSONObject.includes(req.params.name)) {
         var user = users.find(u => u.name === name);
-        console.log(user.name)
-        res.render(__dirname + '/public/search.ejs', { name: user.name, mail: user.mail })
+        res.render(__dirname + '/public/search.ejs', { name: user.name, mail: user.mail, description:user.description})
     }
     else {
         res.send("This user doesn't exist")
