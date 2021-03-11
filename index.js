@@ -68,6 +68,8 @@ app.post('/', function (req, res) {
                  console.log(filterArray)
                  json = JSON.stringify(filterArray); //convert it back to json
                  fs.writeFileSync('./data.json', json, { encoding: 'utf8', flag: 'w' });
+
+                 res.redirect('/')
                 }
          
         
@@ -78,6 +80,74 @@ app.post('/', function (req, res) {
             }
 
         })
+
+        app.get('/user/settings/change_password',function (req, res){
+            if (req.cookies.LoggedIn == undefined) {
+                res.redirect('/user/settings')
+            
+            } else {
+                res.sendFile(__dirname + '/public/changepass.html')
+            }
+            
+        })
+
+        app.post('/user/settings/change_password',function (req, res){
+            var JSONObject = fs.readFileSync(__dirname + '/data.json')
+            console.log(req.body.password)
+
+            if (JSONObject.includes(req.body.password)){
+                res.redirect('/user/settings')
+            }
+            else {
+            var myArray = JSON.parse(fs.readFileSync('./data.json', 'UTF-8'));
+            objIndex = myArray.findIndex((obj => obj.name == username));
+
+            console.log(myArray)
+
+            myArray[objIndex].pass = req.body.password
+
+            console.log(myArray)
+            change = JSON.stringify(myArray);
+            res.redirect('/')
+            fs.writeFileSync('./data.json',change , { encoding: 'utf8', flag: 'w' });
+            }
+
+
+        })
+        app.get('/user/settings/change_name',function (req, res){
+            if (req.cookies.LoggedIn == undefined){
+                res.redirect('/')
+            }
+            else {
+                res.sendFile(__dirname+'/public/changename.html');
+            }
+        })
+
+        app.post('/user/settings/change_name',function (req, res){
+            var JSONObject = fs.readFileSync(__dirname + '/data.json')
+            console.log(req.body.newname)
+            if (JSONObject.includes(req.body.newname)){
+                res.redirect('/user/settings')
+            }
+            else {
+                var myArray = JSON.parse(fs.readFileSync('./data.json', 'UTF-8'));
+                objIndex = myArray.findIndex((obj => obj.name == username));
+    
+                console.log(myArray)
+    
+                myArray[objIndex].name = req.body.newname
+    
+                console.log(myArray)
+                res.redirect('/')
+                change = JSON.stringify(myArray);
+                
+                fs.writeFileSync('./data.json',change , { encoding: 'utf8', flag: 'w' });
+            }
+
+        })
+
+
+
     
 
     } else {

@@ -1,0 +1,40 @@
+<html>
+<body>
+
+
+<h1>Change Password</h1>
+
+
+<p>Please enter your new username</p>
+
+
+<form id="form">
+    <input name="newname">
+</form>
+
+<button class="butt">Change</button>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+$(document).ready(function(){
+        $('.butt').click(function(){
+             $.post('/user/settings/change_name',$('#form').serialize()).done(
+               function(data){
+                if(data.redirect) {
+                      window.location.href=data.url;
+                     }
+                
+
+                })
+        })
+    })
+</script>
+
+
+
+
+
+</body>
+</html>
