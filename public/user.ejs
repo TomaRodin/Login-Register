@@ -9,7 +9,7 @@
         font-family : 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
         padding-left: 150px;
     }
-    .div {background-color:#4E7D96;
+    .div {
     padding-left: 150px;
     padding-bottom: 20px;}
 
@@ -18,7 +18,17 @@
         padding-left: 50px;
         padding-top: 15px;
     }    
+
+    .settings {
+        position: absolute;
+        height: 40px;
+        width:40px;
+        float: right;
+        margin-left: 1440px;
+        padding-top: 15px;
+    }
 </style>
+<img src="/Images/settings.png" class="settings" onClick="settings()">
 <img src="/Images/ko.png" class="user" height="70" width="70">
 <div class="div">
     
@@ -31,6 +41,15 @@
 
 <a href="/logout">Log Out</a>
 <br>
+
+
+<script>
+    function settings() {
+        window.location.href = "http://localhost:3000/user/settings"
+    }
+</script>
+
+
 
 
 </html>

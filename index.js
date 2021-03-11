@@ -1,6 +1,7 @@
 var express = require('express');
 var nodemailer = require('nodemailer')
 var fs = require('fs');
+var jsonfile = require('jsonfile')
 var bodyParser = require('body-parser')
 var app = express();
 var cookieParser = require('cookie-parser')
@@ -21,7 +22,7 @@ app.post('/', function (req, res) {
     var password = req.body.pass
     console.log(username)
     console.log(password)
-    var user = users.find(u => u.name === username);
+    var user = users.find(u => u.name === req.body.user);
     if (username == user.name && password == user.pass) {
         console.log("Succesfully Login")
         res.cookie('LoggedIn', "true")
@@ -33,10 +34,51 @@ app.post('/', function (req, res) {
                 res.redirect('/')
             }
             else {
-                var mail = user.mail
-                res.render(__dirname + '/public/user.ejs', { name: username , mail: mail })
+                res.render(__dirname + '/public/user.ejs', { name: username, mail: user.mail })
             }
         })
+
+
+        app.get('/user/settings', function (req, res) {
+            if (req.cookies.LoggedIn == undefined) {
+                res.redirect('/')
+            }
+            else {
+                
+                res.render(__dirname + '/public/settings.ejs', { name: username, mail: user.mail })
+            }
+        })
+
+        app.get('/user/settings/delete',function (req, res) {
+            if (req.cookies.LoggedIn == undefined) {
+                res.redirect('/')
+            }
+            else {
+                res.sendFile(__dirname + '/public/delete.html')
+
+            }
+        })
+        app.post('/user/settings/delete',function (req, res){
+            console.log(req.body.user)
+            if (req.body.user = "AGREE") {
+                var array = JSON.parse(fs.readFileSync('./data.json', 'UTF-8'));
+                console.log(array)
+                const filterArray = array.filter((item) => item.name !== username);
+                 console.log('Deleted')
+                 console.log(filterArray)
+                 json = JSON.stringify(filterArray); //convert it back to json
+                 fs.writeFileSync('./data.json', json, { encoding: 'utf8', flag: 'w' });
+                }
+         
+        
+                 
+
+            else {
+                res.redirect('/user/settings')
+            }
+
+        })
+    
 
     } else {
         res.send({ redirect: true, url: "/" });
@@ -97,32 +139,22 @@ app.get('/search/:name', function (req, res) {
     if (JSONObject.includes(req.params.name)) {
         var user = users.find(u => u.name === name);
         console.log(user.name)
-        res.render(__dirname + '/public/search.ejs', {name: user.name, mail:user.mail})
+        res.render(__dirname + '/public/search.ejs', { name: user.name, mail: user.mail })
     }
     else {
         res.send("This user doesn't exist")
     }
 
 })
-app.get('/user/home',function(req, res){
-    if (req.cookies.LoggedIn == undefined){
+app.get('/user/home', function (req, res) {
+    if (req.cookies.LoggedIn == undefined) {
         res.redirect('/')
 
-    
+
     } else {
         res.sendFile(__dirname + '/public/home.html')
     }
 })
-
-
-
-
-
-
-
-
-
-
 
 
 app.listen(3000)
