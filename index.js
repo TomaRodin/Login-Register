@@ -39,7 +39,9 @@ app.get('/user', function (req, res) {
     else {
         var users = JSON.parse(fs.readFileSync('./data.json', 'UTF-8'));
         var user = users.find(u => u.name === req.cookies.LoggedIn);
-        res.render(__dirname + '/public/user.ejs', { name: user.name, mail: user.mail, description: user.desc })
+        var images = JSON.parse(fs.readFileSync('./image.json','UTF-8'))
+        var image = images.find(u => u.name === req.cookies.LoggedIn);
+        res.render(__dirname + '/public/user.ejs', { name: user.name, mail: user.mail, description: user.desc, image:image.image })
     }
 })
 
@@ -114,8 +116,9 @@ app.get('/user', function (req, res) {
 
                 console.log(myArray)
                 change = JSON.stringify(myArray);
-                res.redirect('/')
+                
                 fs.writeFileSync('./data.json', change, { encoding: 'utf8', flag: 'w' });
+                res.redirect('/')
             }
 
 
@@ -137,17 +140,30 @@ app.get('/user', function (req, res) {
             }
             else {
                 var myArray = JSON.parse(fs.readFileSync('./data.json', 'UTF-8'));
-                objIndex = myArray.findIndex((obj => obj.name == username));
+                objIndex = myArray.findIndex((obj => obj.name == req.cookies.LoggedIn));
 
                 console.log(myArray)
 
                 myArray[objIndex].name = req.body.newname
 
                 console.log(myArray)
-                res.redirect('/')
+                
                 change = JSON.stringify(myArray);
 
                 fs.writeFileSync('./data.json', change, { encoding: 'utf8', flag: 'w' });
+                var myArray = JSON.parse(fs.readFileSync('./image.json', 'UTF-8'));
+                objIndex = myArray.findIndex((obj => obj.name == req.cookies.LoggedIn));
+
+                console.log(myArray)
+
+                myArray[objIndex].name = req.body.newname
+
+                console.log(myArray)
+                
+                change = JSON.stringify(myArray);
+
+                fs.writeFileSync('./image.json', change, { encoding: 'utf8', flag: 'w' });
+                res.redirect('/')
             }
 
         })
@@ -165,19 +181,45 @@ app.get('/user', function (req, res) {
         app.post('/user/settings/change_description', function (req, res) {
             console.log(req.body.description)
             var myArra = JSON.parse(fs.readFileSync('./data.json', 'UTF-8'));
-            objIndex = myArra.findIndex((obj => obj.name == username));
+            objIndex = myArra.findIndex((obj => obj.name == req.cookies.LoggedIn));
 
             console.log(myArra)
 
             myArra[objIndex].desc = req.body.description
 
             console.log(myArra)
-            res.redirect('/')
+            
             changedesc = JSON.stringify(myArra);
 
             fs.writeFileSync('./data.json', changedesc, { encoding: 'utf8', flag: 'w' });
+            res.redirect('/user')
         })
 
+        app.get('/user/settings/change_picture',function (req, res) {
+            if (req.cookies.LoggedIn == undefined){
+                res.redirect('/')
+            }
+
+            else {
+                res.sendFile(__dirname+'/public/changepicture.html')
+            }
+        })
+
+        app.post('/user/settings/change_picture',function (req, res) {
+            var myArra = JSON.parse(fs.readFileSync('./image.json', 'UTF-8'));
+            objIndex = myArra.findIndex((obj => obj.name == req.cookies.LoggedIn));
+
+        
+
+            myArra[objIndex].image = req.body.picture
+
+           
+            
+            changedesc = JSON.stringify(myArra);
+
+            fs.writeFileSync('./image.json', changedesc, { encoding: 'utf8', flag: 'w' });
+            res.redirect('/user')
+        })
 
 
 
@@ -209,13 +251,23 @@ app.post('/register', function (req, res) {
             "name": req.body.username,
             "pass": req.body.comment,
             "mail": req.body.mail,
-            "desc": ""
+            "desc": "",
 
         })
 
         var jsonArray = JSON.stringify(array);
         fs.writeFileSync('./data.json', jsonArray, { encoding: 'utf8', flag: 'w' });
         console.log('Created');
+        var imagearray= JSON.parse(fs.readFileSync('./image.json', 'utf8'));
+        imagearray.push({
+            "name": req.body.username,
+            "image": "/Images/ko.png"
+
+        })
+
+        var jsonImage = JSON.stringify(imagearray);
+        fs.writeFileSync('./image.json', jsonImage, { encoding: 'utf8', flag: 'w' });
+
         res.send({ redirect: true, url: "/" });
         res.end();
     }
@@ -240,8 +292,10 @@ app.get('/search/:name', function (req, res) {
 
     if (JSONObject.includes(req.params.name)) {
         var users = JSON.parse(fs.readFileSync('./data.json', 'UTF-8'));
+        var images = JSON.parse(fs.readFileSync('./image.json','UTF-8'))
+        var image = images.find(u => u.name === name);
         var user = users.find(u => u.name === name);
-        res.render(__dirname + '/public/search.ejs', { name: user.name, mail: user.mail, description: user.desc })
+        res.render(__dirname + '/public/search.ejs', { name: user.name, mail: user.mail, description: user.desc,image: image.image })
     }
     else {
         res.send("This user doesn't exist")
@@ -268,11 +322,11 @@ app.post('/forgot_password',function (req, res) {
     console.log(req.body.user)
     var token = uuidv4();
     let transport = nodemailer.createTransport({
-        host: '//',
-        port: //,
+        host: 'smtp.gmail.com',
+        port: 465,
         auth: {
            user: 'vgta320@gmail.com',
-           pass: '//'
+           pass: 'ddlvmcknsaiuwnxg'
         }
     }); 
 

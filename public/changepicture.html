@@ -1,0 +1,33 @@
+<html>
+<body>
+
+<h1>Change Picture</h1>
+
+
+<p>Paste address of the picture</p>
+<form id="form">
+<input name="picture">
+</form>
+
+<button class="btn">Change</button>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+$(document).ready(function(){
+        $('.btn').click(function(){
+             $.post('/user/settings/change_picture',$('#form').serialize()).done(
+               function(data){
+                if(data.redirect) {
+                      window.location.href=data.url;
+                     }
+                
+
+                })
+        })
+    })
+</script>
+
+    
+</body>
+</html>

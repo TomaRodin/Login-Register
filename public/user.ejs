@@ -28,8 +28,9 @@
         padding-top: 15px;
     }
 </style>
+<body onload="image()">
 <img src="/Images/settings.png" class="settings" onClick="settings()">
-<img src="/Images/ko.png" class="user" height="70" width="70">
+<div id="demo"></div>
 <div class="div">
     
     <h1 style="padding-top:30px">Welcome, <%=name%></h1>
@@ -47,12 +48,17 @@
 
 
 <script>
+    function image() {
+
+        document.getElementById("demo").innerHTML = "<img src="+"<%=image%>"+" class="+"user"+" height="+"70"+" width="+"70"+">"
+    }
+
     function settings() {
         window.location.href = "http://localhost:3000/user/settings"
     }
 </script>
 
-
+</bod>
 
 
 </html>
