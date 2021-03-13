@@ -268,11 +268,11 @@ app.post('/forgot_password',function (req, res) {
     console.log(req.body.user)
     var token = uuidv4();
     let transport = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 465,
+        host: '//',
+        port: //,
         auth: {
            user: 'vgta320@gmail.com',
-           pass: 'ddlvmcknsaiuwnxg'
+           pass: '//'
         }
     }); 
 
