@@ -28,20 +28,20 @@ app.post('/', function (req, res) {
     var user = users.find(u => u.name === req.body.user);
     if (username == user.name && password == user.pass) {
         console.log("Succesfully Login")
-        res.cookie('LoggedIn', "true")
+        res.cookie('LoggedIn', user.name)
 
         res.send({ redirect: true, url: "/user" })
 
-        app.get('/user', function (req, res) {
-            if (req.cookies.LoggedIn == undefined) {
-                res.redirect('/')
-            }
-            else {
-                var users = JSON.parse(fs.readFileSync('./data.json', 'UTF-8'));
-                var user = users.find(u => u.name === username);
-                res.render(__dirname + '/public/user.ejs', { name: username, mail: user.mail, description: user.desc })
-            }
-        })
+app.get('/user', function (req, res) {
+    if (req.cookies.LoggedIn == undefined) {
+        res.redirect('/')
+    }
+    else {
+        var users = JSON.parse(fs.readFileSync('./data.json', 'UTF-8'));
+        var user = users.find(u => u.name === req.cookies.LoggedIn);
+        res.render(__dirname + '/public/user.ejs', { name: user.name, mail: user.mail, description: user.desc })
+    }
+})
 
 
         app.get('/user/settings', function (req, res) {
