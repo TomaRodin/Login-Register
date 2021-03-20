@@ -77,7 +77,7 @@ app.get('/user', function (req, res) {
                 json = JSON.stringify(filterArray); //convert it back to json
                 fs.writeFileSync('./data.json', json, { encoding: 'utf8', flag: 'w' });
 
-                res.redirect('/')
+                res.send({ redirect: true, url: "/" });
             }
 
 
@@ -108,7 +108,7 @@ app.get('/user', function (req, res) {
             }
             else {
                 var myArray = JSON.parse(fs.readFileSync('./data.json', 'UTF-8'));
-                objIndex = myArray.findIndex((obj => obj.name == username));
+                objIndex = myArray.findIndex((obj => obj.name == req.cookies.LoggedIn));
 
                 console.log(myArray)
 
@@ -118,7 +118,7 @@ app.get('/user', function (req, res) {
                 change = JSON.stringify(myArray);
                 
                 fs.writeFileSync('./data.json', change, { encoding: 'utf8', flag: 'w' });
-                res.redirect('/')
+                res.send({ redirect: true, url: "/" });
             }
 
 
@@ -163,7 +163,7 @@ app.get('/user', function (req, res) {
                 change = JSON.stringify(myArray);
 
                 fs.writeFileSync('./image.json', change, { encoding: 'utf8', flag: 'w' });
-                res.redirect('/')
+                res.send({ redirect: true, url: "/" });
             }
 
         })
@@ -192,7 +192,7 @@ app.get('/user', function (req, res) {
             changedesc = JSON.stringify(myArra);
 
             fs.writeFileSync('./data.json', changedesc, { encoding: 'utf8', flag: 'w' });
-            res.redirect('/user')
+            res.send({ redirect: true, url: "/user" });
         })
 
         app.get('/user/settings/change_picture',function (req, res) {
@@ -218,7 +218,52 @@ app.get('/user', function (req, res) {
             changedesc = JSON.stringify(myArra);
 
             fs.writeFileSync('./image.json', changedesc, { encoding: 'utf8', flag: 'w' });
-            res.redirect('/user')
+            res.send({ redirect: true, url: "/" });
+        })
+
+        app.get('/user/settings/status',function(req, res){
+            if (req.cookies.LoggedIn == undefined){
+                res.render('/')
+            }
+            else {
+                res.sendFile(__dirname+'/public/status.html')
+            }
+        })
+
+        app.post('/user/settings/status',function(req, res){
+            console.log(req.body.status)
+            if (req.body.status == "private"){
+                var myArra = JSON.parse(fs.readFileSync('./data.json', 'UTF-8'));
+                objIndex = myArra.findIndex((obj => obj.name == req.cookies.LoggedIn));
+    
+                console.log(myArra)
+    
+                myArra[objIndex].status = req.body.status
+    
+                console.log(myArra)
+                
+                changestatus = JSON.stringify(myArra);
+    
+                fs.writeFileSync('./data.json', changestatus, { encoding: 'utf8', flag: 'w' });
+
+                res.redirect("/user");
+            }
+            else if (req.body.status == "public"){
+                var myArra = JSON.parse(fs.readFileSync('./data.json', 'UTF-8'));
+                objIndex = myArra.findIndex((obj => obj.name == req.cookies.LoggedIn));
+    
+                console.log(myArra)
+    
+                myArra[objIndex].status = req.body.status
+    
+                console.log(myArra)
+                
+                changestatus = JSON.stringify(myArra);
+    
+                fs.writeFileSync('./data.json', changestatus, { encoding: 'utf8', flag: 'w' });
+
+                res.redirect("/user");
+            }
         })
 
 
@@ -252,6 +297,7 @@ app.post('/register', function (req, res) {
             "pass": req.body.comment,
             "mail": req.body.mail,
             "desc": "",
+            "status":"public"
 
         })
 
@@ -276,6 +322,7 @@ app.post('/register', function (req, res) {
 
 app.get('/logout', function (req, res) {
     res.clearCookie("LoggedIn")
+    res.clearCookie('mail')
     res.redirect('/')
 })
 
@@ -295,7 +342,13 @@ app.get('/search/:name', function (req, res) {
         var images = JSON.parse(fs.readFileSync('./image.json','UTF-8'))
         var image = images.find(u => u.name === name);
         var user = users.find(u => u.name === name);
+        if (user.status == "public"){
         res.render(__dirname + '/public/search.ejs', { name: user.name, mail: user.mail, description: user.desc,image: image.image })
+        }
+        else if (user.status == "private"){
+            res.render(__dirname + '/public/searchprivate.ejs', { name: user.name, mail: user.mail, description: user.desc,image: image.image })
+        }
+
     }
     else {
         res.send("This user doesn't exist")
