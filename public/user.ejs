@@ -1,6 +1,10 @@
 <html>
 
 <style>
+    .body {
+        background-color:white;
+        color: black
+    }
     h1 {
         font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
     }
@@ -27,9 +31,22 @@
         margin-left: 1440px;
         padding-top: 15px;
     }
+    .dark-mode {
+        background-color:#0D1117;
+        color: #FFFFFF
+
+    }
 </style>
 <body onload="image()">
-<img src="/Images/settings.png" class="settings" onClick="settings()">
+<img src="/Images/settings.png" id="sett" class="settings" onClick="settings()">
+
+<div style="position: fixed; padding-left: 1200px" class="form-check form-switch">
+    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" onclick="dark()" />
+    <label class="form-check-label" for="flexSwitchCheckDefault"
+      >Dark Mode</label
+    >
+</div>
+
 <div id="demo"></div>
 <div class="div">
     
@@ -47,18 +64,33 @@
 <br>
 
 
+
 <script>
     function image() {
 
-        document.getElementById("demo").innerHTML = "<img src="+"<%=image%>"+" class="+"user"+" height="+"70"+" width="+"70"+">"
+        document.getElementById("demo").innerHTML = "<img id="+"profile"+" src="+"<%=image%>"+" class="+"user"+" height="+"70"+" width="+"70"+">"
     }
 
     function settings() {
-        window.location.href = "http://localhost:3000/user/settings"
+        window.location.href = "/user/settings"
+    }
+    function dark(){
+        var checkBox = document.getElementById("flexSwitchCheckDefault");
+        if (checkBox.checked == true){
+            var element = document.body;
+            element.classList.toggle("dark-mode");
+            document.getElementById("sett").src = "/Images/settingsdark.png";
+            
+        } else {
+            var element = document.body;
+            element.classList.toggle("dark-mode");
+            document.getElementById("sett").src = "/Images/settings.png";
+            
+        }
     }
 </script>
 
-</bod>
+</body>
 
 
 </html>

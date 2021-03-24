@@ -77,6 +77,14 @@ app.get('/user', function (req, res) {
                 json = JSON.stringify(filterArray); //convert it back to json
                 fs.writeFileSync('./data.json', json, { encoding: 'utf8', flag: 'w' });
 
+                var arrayimage = JSON.parse(fs.readFileSync('./image.json', 'UTF-8'));
+                console.log(arrayimage)
+                const filterArrayimg = arrayimage.filter((item) => item.name !== username);
+                console.log('Deleted')
+                console.log(filterArrayimg)
+                json = JSON.stringify(filterArrayimg); //convert it back to json
+                fs.writeFileSync('./image.json', json, { encoding: 'utf8', flag: 'w' });
+
                 res.send({ redirect: true, url: "/" });
             }
 
