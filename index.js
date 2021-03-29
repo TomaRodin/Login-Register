@@ -387,7 +387,7 @@ app.post('/forgot_password',function (req, res) {
         port: 465,
         auth: {
            user: 'vgta320@gmail.com',
-           pass: 'ddlvmcknsaiuwnxg'
+           pass: /
         }
     }); 
 
