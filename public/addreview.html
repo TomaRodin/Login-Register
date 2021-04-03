@@ -1,0 +1,44 @@
+<html>
+<body>
+<style>
+    
+.comment{
+  resize: none;
+  height: 300px;
+  width: 800px;
+  padding:15px;
+  border-radius:15px;
+  border:0;
+  box-shadow:4px 4px 10px rgba(0,0,0,0.06);
+  height:150px;
+}
+.reform{
+    padding-left: 15px;
+    padding-top: 150px;
+}
+</style>
+    <h1>Add Review</h1>
+    <div class="reform">
+        <form id="reform">
+            <textarea class="comment" name="comment" placeholder="Text:" required></textarea> 
+        </form>
+        <div class="butt">Sumbit</div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script>
+    $(document).ready(function(){
+            $('.butt').click(function(){
+                var comment =$('textarea[name="comment"]').val();
+                 $.post('/user/review',$('#reform').serialize()).done(
+                   function(data){
+                    if(data.redirect) {
+                      window.location.href=data.url;
+                     }
+                     console.log(username)
+                     console.log(comment)
+                    })
+            })
+        })
+    </script>
+</body>
+</html>

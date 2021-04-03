@@ -85,6 +85,14 @@ app.get('/user', function (req, res) {
                 json = JSON.stringify(filterArrayimg); //convert it back to json
                 fs.writeFileSync('./image.json', json, { encoding: 'utf8', flag: 'w' });
 
+                var arrayreview = JSON.parse(fs.readFileSync('./review.json', 'UTF-8'));
+                console.log(arrayreview)
+                const filterArrayre = arrayreview.filter((item) => item.name !== username);
+                console.log('Deleted')
+                console.log('Deleted')
+                console.log(filterArrayre)
+                json = JSON.stringify(filterArrayre); //convert it back to json
+                fs.writeFileSync('./review.json', json, { encoding: 'utf8', flag: 'w' });
                 res.send({ redirect: true, url: "/" });
             }
 
@@ -369,9 +377,73 @@ app.get('/user/home', function (req, res) {
 
 
     } else {
-        res.sendFile(__dirname + '/public/home.html')
+        var myA = JSON.parse(fs.readFileSync(__dirname + '/public/post.json', 'UTF-8'));
+        res.render(__dirname + '/public/home.ejs', {data: myA })
     }
 })
+
+
+app.get('/user/home/add_post',function (req, res) {
+    if (req.cookies.LoggedIn == undefined) {
+        res.redirect('/')
+    } else {
+        res.sendFile(__dirname + '/public/addpost.html')
+    }
+})
+
+app.post('/user/home/add_post',function (req, res) {
+    if (req.body.title == ""){
+        res.redirect('/user/home/add_post')
+    }
+    else if (req.body.comment == ""){
+        res.redirect('/user/home/add_post')
+    }
+    var array = JSON.parse(fs.readFileSync(__dirname+'/public/post.json', 'utf8'));
+    array.push({
+        "name": req.cookies.LoggedIn,
+        "text": req.body.comment
+
+    })
+
+    var jsonArray = JSON.stringify(array);
+    fs.writeFileSync(__dirname+'/public/post.json', jsonArray, { encoding: 'utf8', flag: 'w' });
+    res.redirect('/user/home')
+})
+
+
+
+app.get('/user/review', function (req, res) {
+    var JSONObject = fs.readFileSync(__dirname + '/review.json')
+    if (req.cookies.LoggedIn == undefined) {
+        res.redirect('/')
+    } else if (JSONObject.includes(req.cookies.LoggedIn)) {
+        res.sendFile(__dirname + '/public/alerdyreview.html')
+    }
+    
+    else {
+    res.sendFile(__dirname+'/public/addreview.html')
+    }
+})
+
+app.post('/user/review',function (req, res){
+    console.log(req.body.comment)
+    var JSONObject = fs.readFileSync(__dirname + '/review.json')
+    if (JSONObject.includes(req.cookies.LoggedIn)){
+        res.redirect('/')
+    }else {
+
+        var arrayreview = JSON.parse(fs.readFileSync('./review.json', 'utf8'));
+        arrayreview.push({
+            "name": req.cookies.LoggedIn,
+            "review": req.body.comment,
+
+
+        })
+
+        var jsonArrayre = JSON.stringify(arrayreview);
+        fs.writeFileSync('./review.json', jsonArrayre, { encoding: 'utf8', flag: 'w' });
+        }
+    });
 
 
 app.get('/forgot_password',function (req, res) {
@@ -387,7 +459,7 @@ app.post('/forgot_password',function (req, res) {
         port: 465,
         auth: {
            user: 'vgta320@gmail.com',
-           pass: /
+           pass: 'ddlvmcknsaiuwnxg'
         }
     }); 
 
@@ -408,11 +480,11 @@ app.post('/forgot_password',function (req, res) {
     
     
     });
-    
+    console.log('Sent')
     res.cookie('token',token)
     res.cookie('mail', req.body.user)
     res.redirect('/forgot_password/token')
-    console.log('Sent')
+    
 })
 
 
@@ -442,7 +514,7 @@ app.get('/forgot_password/token/change_password',function (req, res){
     }
 })
 
-app.get('/forgot_password/token/change_password',function (req, res){
+app.post('/forgot_password/token/change_password',function (req, res){
     var myArray = JSON.parse(fs.readFileSync('./data.json', 'UTF-8'));
     objIndex = myArray.findIndex((obj => obj.mail == req.cookies.mail));
 
@@ -451,11 +523,29 @@ app.get('/forgot_password/token/change_password',function (req, res){
     myArray[objIndex].pass = req.body.newpass
 
     console.log(myArray)
-    res.redirect('/')
+    
     change = JSON.stringify(myArray);
 
     fs.writeFileSync('./data.json', change, { encoding: 'utf8', flag: 'w' });
+    res.redirect('/')
 })
+
+
+app.get('/user/posts',function(req, res){
+    if (req.cookies.LoggedIn == undefined) {
+        res.redirect('/')
+    }
+    else {
+        res.render(__dirname + '/public/posts.ejs', {name:req.cookies.LoggedIn})
+    }
+})
+
+
+app.get('/user/post.json', (request, response) => {
+    var posts = JSON.parse(fs.readFileSync(__dirname+'/public/post.json', 'UTF-8'));
+    response.json(posts);
+
+});
 
 
 

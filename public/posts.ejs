@@ -1,0 +1,36 @@
+<html>
+<body onload="myfunction()">
+
+<div class="wrapper"><div></div>
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+
+<script>
+  function myfunction() {
+
+    $.getJSON( "post.json", function( data){
+      
+        const searchKey = "<%=name%>"
+
+      
+        const searchResult = data.filter(({ name }) => name.toLowerCase() === searchKey.toLowerCase());
+
+
+        const parentWrapper = document.querySelector('.wrapper');
+        searchResult.forEach((el) => {
+            const child = document.createElement('h1');
+            child.textContent = el.text;
+            parentWrapper.appendChild(child);
+        });
+        
+  });
+  }
+</script>
+
+  
+</div>
+</body>
+</html>

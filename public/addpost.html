@@ -1,0 +1,30 @@
+<html>
+<body>
+    <h1>Add Post</h1>
+
+<form id="reform">
+    <h4>Title:</h4>
+    <input name="title">
+    <br>
+    <h4>Text:</h4>
+    <textarea name="comment"></textarea>
+    <br>
+    <br>
+    <button class="butt">Post</button>
+</form>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+        $('.butt').click(function(){
+             $.post('/user/home/add_post',$('#reform').serialize()).done(
+               function(data){
+                if(data.redirect) {
+                  window.location.href=data.url;
+                 }
+                })
+        })
+    })
+</script>
+
+</body>
+</html>
