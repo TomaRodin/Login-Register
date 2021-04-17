@@ -401,6 +401,7 @@ app.post('/user/home/add_post',function (req, res) {
     var array = JSON.parse(fs.readFileSync(__dirname+'/public/post.json', 'utf8'));
     array.push({
         "name": req.cookies.LoggedIn,
+        "title":req.body.title,
         "text": req.body.comment
 
     })
@@ -546,7 +547,6 @@ app.get('/user/post.json', (request, response) => {
     response.json(posts);
 
 });
-
 
 
 app.listen(3000)

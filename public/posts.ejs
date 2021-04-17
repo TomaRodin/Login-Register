@@ -18,7 +18,7 @@
       
         const searchResult = data.filter(({ name }) => name.toLowerCase() === searchKey.toLowerCase());
 
-
+        // render the filtered array on HTML
         const parentWrapper = document.querySelector('.wrapper');
         searchResult.forEach((el) => {
             const child = document.createElement('h1');
