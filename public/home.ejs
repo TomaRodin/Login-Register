@@ -81,7 +81,10 @@
         border: 1px solid #ccc;  
       }
     }
-
+    .wrapper{
+      display: flex;
+      flex-direction: column-reverse;
+    }
     
     </style>
     
@@ -128,15 +131,6 @@
       window.location.href = "/user/home/add_post"
     }
 
-    function posts(){
-      var obj = "<%=data%>";
-      var text = "";
-      var i;
-      for (i = 0; i < obj.length; i++) {
-  text += obj[i] + "<br>";
-}
-    document.getElementById("demo").innerHTML = text;
-    }
 </script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -156,9 +150,14 @@
             const child = document.createElement('h2');
             child.textContent = el.title;
             div.appendChild(child);
+            const date = document.createElement('p')
+            date.textContent = el.date
+            div.appendChild(date)
             const link = document.createElement('p')
             link.textContent = el.text
             div.appendChild(link)
+            const space = document.createElement('br');
+            parentWrapper.appendChild(space)
             parentWrapper.append(div);
         });
         

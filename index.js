@@ -398,11 +398,13 @@ app.post('/user/home/add_post',function (req, res) {
     else if (req.body.comment == ""){
         res.redirect('/user/home/add_post')
     }
+    let date_ob = new Date();
     var array = JSON.parse(fs.readFileSync(__dirname+'/public/post.json', 'utf8'));
     array.push({
         "name": req.cookies.LoggedIn,
         "title":req.body.title,
-        "text": req.body.comment
+        "text": req.body.comment,
+        "date": date_ob.getHours() +":"+date_ob.getMinutes()+':'+ " " + date_ob.getDate()+'/'+date_ob.getMonth()+'/'+ date_ob.getYear()
 
     })
 
